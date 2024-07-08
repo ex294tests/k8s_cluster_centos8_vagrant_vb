@@ -21,6 +21,8 @@ config_path="/vagrant/configs"
 # add additional control plane to the k8s cluster
 $config_path/extramaster.sh
 
+sudo copy -i $config_path/config /etc/kubernetes/config
+
 export KUBECONFIG=/etc/kubernetes/admin.conf 
 
 #mkdir -p "$HOME"/.kube

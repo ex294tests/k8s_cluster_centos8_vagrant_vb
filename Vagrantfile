@@ -126,7 +126,7 @@ Vagrant.configure("2") do |config|
 			
 			# if vm is controller01 then kubeadm init, otherwise kubeadm join --control-plane
 			if "#{i}" == "1"			
-				puts("******** CONTROLLER 1 ********************")
+				# puts("******** CONTROLLER 1 ********************")
 			# controlplane.vm.hostname == "#{CONTR_NAME}1"
 				controlplane.vm.provision "shell",
 					env: {
@@ -136,16 +136,7 @@ Vagrant.configure("2") do |config|
 						"SERVICE_CIDR" => settings["network"]["service_cidr"]
 					}, 
 				path: "scripts/master.sh"
-				
-				
-				if settings["ansible"]
-					puts("******** Ansible deploy: yes ********************")
-					controlplane.vm.provision "shell",
-						env: {
-							"VERSION" => settings["ansible"]["version"]
-						}, 
-					path: "scripts/ansible.sh"			
-				end
+								
 			else
 				controlplane.vm.provision "shell",
 					env: {
@@ -245,7 +236,16 @@ Vagrant.configure("2") do |config|
 					"NFS_DIR" => settings["nfs"]["dir"],
 					"SUBNET" => "#{IP_NW_NFS}"
 				}, 
-			path: "scripts/nfs.sh"			
+			path: "scripts/nfs.sh"	
+
+			if settings["ansible"]
+				#puts("******** Ansible deploy: yes ********************")
+				nfs.vm.provision "shell",
+					env: {
+						"VERSION" => settings["ansible"]["version"]
+					}, 
+				path: "scripts/ansible.sh"			
+			end
 
 		end
 	end

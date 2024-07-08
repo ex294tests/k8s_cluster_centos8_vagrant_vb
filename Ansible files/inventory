@@ -1,0 +1,10 @@
+[k8s_controllers]
+controller01
+
+[k8s_nodes]
+node01
+node02
+
+[all:children]
+k8s_controllers
+k8s_nodes

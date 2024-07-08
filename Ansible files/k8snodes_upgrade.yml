@@ -1,0 +1,102 @@
+---
+- name: upgrade K8S nodes
+  hosts: controller01
+ # become: yes
+  vars:
+    - k8s_upgrade_v: 1.29
+  tasks:
+
+    - fail: 
+        msg: "'target' is not defined"
+      when: target is not defined
+
+    - name: Drain nodes
+      command: kubectl drain "{{ target }}" --delete-emptydir-data --ignore-daemonsets
+      ignore_errors: yes
+      #with_items:
+      #  - "{{ groups['k8s_nodes'] }}"
+
+    - name: check nodes
+      command: kubectl get nodes
+      register: ut
+    - name: Status of k8s nodes on Controller01
+      debug:
+        var: ut.stdout_lines 
+
+
+- name: Update Kubernetes repository on nodes
+  #hosts: k8s_nodes
+  # on the cli we will specify --extra-vars "target=node01"
+  hosts: "{{ target }}"
+ # become: yes
+  vars:
+    - k8s_upgrade_v: 1.29
+    - k8s_full_version: 1.29.6-150500.1.1
+  tasks:
+        
+    - name: check current k8s version
+      shell: kubectl version|grep -i version
+      register: k8sv
+
+    - name: Current k8s version
+      debug:
+        var: k8sv.stdout_lines[0]
+
+    - name: version to upgrade
+      debug:
+        msg: "Upgrading k8s nodes to version {{k8s_upgrade_v}}"
+
+    - name: Add repository
+      yum_repository:
+        name: kubernetes
+        description: Kubernetes
+        baseurl: https://pkgs.k8s.io/core:/stable:/v{{k8s_upgrade_v}}/rpm/
+        gpgcheck: yes
+        gpgkey: https://pkgs.k8s.io/core:/stable:/v{{k8s_upgrade_v}}/rpm/repodata/repomd.xml.key
+        exclude: kubelet kubeadm kubectl cri-tools kubernetes-cni
+
+    - name: Update packages from kubernetes repository
+      yum:
+        name: "*"
+        state: latest
+        enablerepo: kubernetes
+
+    - name: Install kubadm {{k8s_full_version}}
+      yum:
+        name: kubeadm-'{{k8s_full_version}}'
+        state: latest
+        enablerepo: kubernetes
+        disable_excludes: kubernetes
+
+    - name: Install kubelet and kubectl {{k8s_full_version}}
+      yum:
+        name: ["kubelet-'{{k8s_full_version}}'", "kubectl-'{{k8s_full_version}}'"]
+        state: latest
+        enablerepo: kubernetes
+        disable_excludes: kubernetes
+
+    - name: Restart kubelet
+      systemd:
+        state: restarted
+        name: kubelet
+        
+    - name: Restart daemon
+      systemd:
+        daemon_reload: true
+
+
+- name: Uncordon nodes on master 
+  hosts: controller01
+  tasks:
+    - name: Uncordon nodes
+      command: kubectl uncordon "{{item}}"
+      ignore_errors: yes
+      with_items:
+        - "{{ groups['k8s_nodes'] }}"
+
+    - name: check nodes
+      command: kubectl get nodes
+      register: ut
+    - name: Status of k8s nodes on Controller01
+      debug:
+        var: ut.stdout_lines 

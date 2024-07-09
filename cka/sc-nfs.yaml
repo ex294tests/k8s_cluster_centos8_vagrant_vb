@@ -4,7 +4,7 @@ metadata:
   name: nfs
 provisioner: nfs.csi.k8s.io
 parameters:
-  server: 10.0.0.49
+  server: 10.0.0.51
   share: /nfs/exports/myshare/
 reclaimPolicy: Retain # default value is Delete
 allowVolumeExpansion: true

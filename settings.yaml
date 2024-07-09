@@ -26,12 +26,12 @@ nodes:
     memory: 4096
     name: controller0
   workers:
-    count: 3
+    count: 0
     cpu: 1
     memory: 4096
     name: node0
 nfs:
-  count: 1
+  count: 0
   cpu: 1
   memory: 1024
   name: nfs0
@@ -53,3 +53,4 @@ software:
   dashboard: 2.7.0
   kubernetes: 1.28.0-*
   os: Centos8
+  etcdutl: 3.5.6

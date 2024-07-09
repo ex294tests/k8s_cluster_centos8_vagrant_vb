@@ -94,3 +94,6 @@ cp -f /vagrant/cka/{.vimrc,.bashrc} /root
 # copy cka yaml files
 #sudo mkdir -p /root/cka
 #sudo cp -f /vagrant/cka/*.yaml /root/cka
+
+
+sudo /vagrant/scripts/backups.sh

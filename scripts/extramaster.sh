@@ -54,3 +54,4 @@ EOF
 # copy .vimrc and .bashrc
 cp -f /vagrant/cka/{.vimrc,.bashrc} /root
 
+sudo /vagrant/scripts/backups.sh

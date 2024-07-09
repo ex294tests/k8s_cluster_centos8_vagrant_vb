@@ -133,7 +133,8 @@ Vagrant.configure("2") do |config|
 						"CALICO_VERSION" => settings["software"]["calico"],
 						"CONTROL_IP" => IP_NW_C + "#{IP_START_C + i}",
 						"POD_CIDR" => settings["network"]["pod_cidr"],
-						"SERVICE_CIDR" => settings["network"]["service_cidr"]
+						"SERVICE_CIDR" => settings["network"]["service_cidr"],
+						"ETCDUTL" => settings["software"]["etcdutl"]
 					}, 
 				path: "scripts/master.sh"
 								

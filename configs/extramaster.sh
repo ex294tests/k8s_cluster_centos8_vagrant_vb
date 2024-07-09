@@ -1,3 +1,3 @@
-  kubeadm join 10.0.0.11:6443 --token v5dgij.3bcp9kr1nddgtzh3 \
-	--discovery-token-ca-cert-hash sha256:ff9fea8caed9d035d9fdb5ae554942f02380bb37454a9ac1488184ce5d38c525 \
-	--control-plane --certificate-key b893d50e551b7b4f42a80237a8b511d070ba16f4cd4f0faa410d9cd01004de88
+  kubeadm join 10.0.0.11:6443 --token 4j7sdx.tqtc00ayvqkq7ohh \
+	--discovery-token-ca-cert-hash sha256:a23b81edb6e757a561b68f8cf1526b5e07fc9428a02bcc5f90ece4bdd15cb262 \
+	--control-plane --certificate-key a8eee31e3fa2ed998e76489822cc0310331e14a4182ea30ec3c054ca70b98f61
